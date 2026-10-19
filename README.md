@@ -44,10 +44,10 @@ wrangler.jsonc        `wrangler deploy` of dist/ as static assets with SPA not-f
 
 ## The contract package
 
-`@dogadopt/contracts` is pinned to a git ref of dog-adopt-spec in `package.json`:
+`@dogadopt/contracts` is pinned to a commit of dog-adopt-spec in `package.json`:
 
 ```json
-"@dogadopt/contracts": "github:dataGriff/dog-adopt-spec#ccr-36d5f29f-ktwvoo"
+"@dogadopt/contracts": "github:dataGriff/dog-adopt-spec#831a65676ba4a9e4bda06de644f0b7611096e57f"
 ```
 
 Every API type, the typed `fetch` client and the enum lists used for filter options come from it; nothing about the API is hand-written here. When the contract moves, change the ref (a tag once released), run `pnpm update @dogadopt/contracts`, and let the typecheck and the fixture tests tell you what changed. `src/test/fixtures.test.ts` validates the test fixtures against the contract's response schemas so the mocked API cannot drift from the real one.

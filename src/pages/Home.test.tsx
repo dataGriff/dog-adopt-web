@@ -101,6 +101,36 @@ describe('Feature: Browsing dogs on the website', () => {
     expect(within(cards[2]!).queryByText(/km$/)).not.toBeInTheDocument();
   });
 
+  it('Scenario: Near me can be cleared and does not snap back', async () => {
+    const api = mockApi();
+    vi.stubGlobal('navigator', {
+      ...navigator,
+      geolocation: {
+        getCurrentPosition: (ok: PositionCallback) => ok({ coords: { latitude: 51.5, longitude: -3.2 } } as GeolocationPosition),
+      },
+    });
+    const { router } = renderApp('/');
+    const user = userEvent.setup();
+    await screen.findAllByTestId('dog-card');
+
+    await user.click(screen.getByRole('button', { name: /Near me/ }));
+    await waitFor(() => expect(new URLSearchParams(router.state.location.search).get('lat')).toBe('51.5'));
+
+    // Clear every filter from the sidebar: the location must go and stay gone.
+    await user.click(screen.getByRole('button', { name: /Clear/ }));
+    await waitFor(() => expect(router.state.location.search).toBe(''));
+    await waitFor(() => expect(api.last('/v1/dogs')!.url.searchParams.has('lat')).toBe(false));
+    expect(screen.getByRole('button', { name: /Near me/ })).toBeInTheDocument();
+
+    // Back to the located URL and forward again: history is not trapped.
+    await router.navigate(-1);
+    await waitFor(() => expect(new URLSearchParams(router.state.location.search).get('lat')).toBe('51.5'));
+    await router.navigate(-1);
+    await waitFor(() => expect(router.state.location.search).toBe(''));
+    await new Promise((r) => setTimeout(r, 50));
+    expect(router.state.location.search).toBe('');
+  });
+
   it('Scenario: Paging through results', async () => {
     const api = mockApi((url) => {
       if (url.pathname !== '/v1/dogs') return undefined;

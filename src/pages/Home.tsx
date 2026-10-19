@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router';
 import { useDogs } from '@/api/queries';
 import { countActiveFilters, filtersFromSearchParams, filtersToSearchParams, type DogFilters } from '@/lib/dogFilters';
@@ -26,12 +26,12 @@ export function HomePage() {
     [filters, setSearchParams],
   );
 
-  // When the browser grants a position, put it in the URL so the view is shareable.
-  useEffect(() => {
-    if (geo.state.status !== 'granted') return;
-    const { lat, lng } = geo.state.coords;
-    if (filters.lat !== lat || filters.lng !== lng) update({ lat, lng });
-  }, [geo.state, filters.lat, filters.lng, update]);
+  // Locating is a one-shot: the position goes into the URL once, so the view is
+  // shareable and Clear or Back can remove it without it snapping back.
+  const nearMe = useCallback(async () => {
+    const coords = await geo.locate();
+    if (coords) update({ lat: coords.lat, lng: coords.lng });
+  }, [geo, update]);
 
   const dogs = useDogs({
     page: filters.page,
@@ -49,7 +49,7 @@ export function HomePage() {
     lng: filters.lng,
   });
 
-  const nearMe = filters.lat !== undefined ? 'on' : geo.state.status === 'locating' ? 'locating' : geo.state.status === 'denied' ? 'denied' : 'idle';
+  const nearMeStatus = filters.lat !== undefined ? 'on' : geo.state.status === 'locating' ? 'locating' : geo.state.status === 'denied' ? 'denied' : 'idle';
 
   return (
     <>
@@ -65,12 +65,9 @@ export function HomePage() {
             <SearchBar
               value={filters.q ?? ''}
               onSearch={(q) => update({ q: q || undefined })}
-              nearMe={nearMe}
-              onNearMe={geo.locate}
-              onClearNearMe={() => {
-                geo.reset();
-                update({ lat: undefined, lng: undefined });
-              }}
+              nearMe={nearMeStatus}
+              onNearMe={() => void nearMe()}
+              onClearNearMe={() => update({ lat: undefined, lng: undefined })}
               locationMessage={geo.state.status === 'denied' ? geo.state.message : undefined}
             />
           </div>
@@ -78,7 +75,10 @@ export function HomePage() {
       </section>
 
       <section id="dogs" className="mx-auto grid max-w-6xl gap-8 px-4 py-8 lg:grid-cols-[280px_1fr]">
-        <FilterSidebar filters={filters} onChange={(patch) => update(patch)} onClear={() => setSearchParams(new URLSearchParams())} activeCount={countActiveFilters(filters)} />
+        <FilterSidebar filters={filters} onChange={(patch) => update(patch)} onClear={() => {
+            geo.reset();
+            setSearchParams(new URLSearchParams());
+          }} activeCount={countActiveFilters(filters)} />
 
         <div>
           <div className="mb-4 flex items-baseline justify-between gap-3">
