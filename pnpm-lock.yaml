@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@dogadopt/contracts':
         specifier: github:dataGriff/dog-adopt-spec#ccr-36d5f29f-ktwvoo
-        version: git+https://git@github.com:dataGriff/dog-adopt-spec.git#8da61590ae4abfd3f170893db928f4566e90911e
+        version: git+https://git@github.com:dataGriff/dog-adopt-spec.git#f9735b0d375e4a022d6b30b6ce167aebf4f6551f
       '@tanstack/react-query':
         specifier: ^5.104.5
         version: 5.104.5(@types/react@19.3.0)(react@19.3.1)
@@ -251,8 +251,8 @@ packages:
     resolution: {integrity: sha512-Vd/9EVDiu6PPJt9yAh6roZP6El1xHrdvIVGjyBsHR0RYwNHgL7FJPyIIW4fANJNG6FtyZfvlRPpFI4ZM/lubvw==}
     engines: {node: '>=18'}
 
-  '@dogadopt/contracts@git+https://git@github.com:dataGriff/dog-adopt-spec.git#8da61590ae4abfd3f170893db928f4566e90911e':
-    resolution: {commit: 8da61590ae4abfd3f170893db928f4566e90911e, repo: git@github.com:dataGriff/dog-adopt-spec.git, type: git}
+  '@dogadopt/contracts@git+https://git@github.com:dataGriff/dog-adopt-spec.git#f9735b0d375e4a022d6b30b6ce167aebf4f6551f':
+    resolution: {commit: f9735b0d375e4a022d6b30b6ce167aebf4f6551f, repo: git@github.com:dataGriff/dog-adopt-spec.git, type: git}
     version: 0.1.0
     engines: {node: '>=22'}
 
@@ -2241,7 +2241,7 @@ snapshots:
 
   '@csstools/css-tokenizer@3.0.4': {}
 
-  '@dogadopt/contracts@git+https://git@github.com:dataGriff/dog-adopt-spec.git#8da61590ae4abfd3f170893db928f4566e90911e':
+  '@dogadopt/contracts@git+https://git@github.com:dataGriff/dog-adopt-spec.git#f9735b0d375e4a022d6b30b6ce167aebf4f6551f':
     dependencies:
       openapi-fetch: 0.17.0
       zod: 4.6.7
