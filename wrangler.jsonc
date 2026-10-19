@@ -1,0 +1,12 @@
+{
+  // Static site deployed with `wrangler deploy` after `pnpm build`.
+  // Workers Static Assets serves dist/; the SPA fallback is handled by
+  // not_found_handling so deep links such as /dogs/<id> load index.html.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "dog-adopt-web",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  }
+}
