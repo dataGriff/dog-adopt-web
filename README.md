@@ -47,7 +47,7 @@ wrangler.jsonc        `wrangler deploy` of dist/ as static assets with SPA not-f
 `@dogadopt/contracts` is pinned to a commit of dog-adopt-spec in `package.json`:
 
 ```json
-"@dogadopt/contracts": "github:dataGriff/dog-adopt-spec#831a65676ba4a9e4bda06de644f0b7611096e57f"
+"@dogadopt/contracts": "git+https://github.com/dataGriff/dog-adopt-spec.git#831a65676ba4a9e4bda06de644f0b7611096e57f"
 ```
 
 Every API type, the typed `fetch` client and the enum lists used for filter options come from it; nothing about the API is hand-written here. When the contract moves, change the ref (a tag once released), run `pnpm update @dogadopt/contracts`, and let the typecheck and the fixture tests tell you what changed. `src/test/fixtures.test.ts` validates the test fixtures against the contract's response schemas so the mocked API cannot drift from the real one.
@@ -59,3 +59,7 @@ Every API type, the typed `fetch` client and the enum lists used for filter opti
 ## Deliberately out of scope
 
 Admin pages, sign-in, the chat assistant and the availability reports from the previous site are not in this version. The site holds no service token and cannot write to the API. Dog descriptions and photos are never copied: a card shows the rescue's own image by link when the API has one, and links to the dog's profile on the rescue's website.
+
+### Installing the contracts in CI
+
+`dog-adopt-spec` is a private repository, so GitHub Actions needs a token that can read it. Create a fine-grained personal access token with **Contents: read** on `dataGriff/dog-adopt-spec` and store it in this repository as the secret `CONTRACTS_READ_TOKEN`. The CI and deploy workflows rewrite every GitHub clone URL to use it before `pnpm install`. If the spec repository is made public the secret is no longer needed.
