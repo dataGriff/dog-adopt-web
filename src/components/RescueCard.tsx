@@ -19,7 +19,8 @@ export function RescueCard({ rescue }: { rescue: Rescue }) {
       </div>
       <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
         <MapPin className="h-4 w-4" aria-hidden /> {rescue.region}
-        {rescue.postcode && <span className="text-border">· {rescue.postcode}</span>}
+        {rescue.postcode && <span aria-hidden>·</span>}
+        {rescue.postcode && <span>{rescue.postcode}</span>}
       </p>
       <div className="mt-auto flex gap-2 pt-1">
         <Link to={`/rescues/${rescue.id}`} className={buttonClasses('secondary', 'sm', 'flex-1')}>

@@ -8,20 +8,24 @@
   --color-foreground: hsl(222 47% 11%);
   --color-card: hsl(0 0% 100%);
   --color-card-foreground: hsl(222 47% 11%);
-  --color-primary: hsl(25 90% 55%);
+  /* Primary is dark enough for white text on it and for text on light
+     backgrounds (5:1 or better). Brand is the brighter orange of the logo,
+     for use on dark surfaces such as the footer. */
+  --color-primary: hsl(21 90% 38%);
+  --color-brand: hsl(25 90% 55%);
   --color-primary-foreground: hsl(210 40% 98%);
   --color-secondary: hsl(210 40% 96%);
   --color-secondary-foreground: hsl(222 47% 11%);
   --color-muted: hsl(210 40% 96%);
-  --color-muted-foreground: hsl(215 16% 47%);
+  --color-muted-foreground: hsl(215 20% 41%);
   --color-accent: hsl(30 100% 95%);
   --color-accent-foreground: hsl(222 47% 11%);
-  --color-destructive: hsl(0 84% 60%);
+  --color-destructive: hsl(0 74% 40%);
   --color-destructive-foreground: hsl(210 40% 98%);
-  --color-success: hsl(150 50% 40%);
+  --color-success: hsl(152 65% 24%);
   --color-border: hsl(214 32% 91%);
   --color-input: hsl(214 32% 91%);
-  --color-ring: hsl(25 90% 55%);
+  --color-ring: hsl(21 90% 38%);
 
   --radius-xl: 1rem;
   --radius-2xl: 1.25rem;
