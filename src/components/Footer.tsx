@@ -21,7 +21,7 @@ export function Footer() {
           </p>
         </div>
         <div>
-          <h4 className="mb-3 font-semibold">Explore</h4>
+          <h2 className="mb-3 font-display text-base font-semibold">Explore</h2>
           <ul className="space-y-2 text-background/70">
             <li>
               <Link to="/" className="hover:text-brand">

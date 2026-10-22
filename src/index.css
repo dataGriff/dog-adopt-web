@@ -53,6 +53,18 @@
   h1, h2, h3, h4 {
     font-family: var(--font-display);
   }
+  /* A visible focus ring for links and anything else focusable that does
+     not draw its own (buttons and inputs use ring utilities instead). */
+  a:focus-visible,
+  summary:focus-visible,
+  [tabindex]:not([tabindex='-1']):focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+    border-radius: 0.375rem;
+  }
+  footer a:focus-visible {
+    outline-color: var(--color-brand);
+  }
 }
 
 .bg-hero {

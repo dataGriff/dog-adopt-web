@@ -8,11 +8,11 @@ export function RescueCard({ rescue }: { rescue: Rescue }) {
   return (
     <article className="flex flex-col gap-3 rounded-2xl border border-border/60 bg-card p-5 shadow-card" data-testid="rescue-card">
       <div className="flex items-start justify-between gap-3">
-        <h3 className="text-lg font-semibold">
+        <h2 className="text-lg font-semibold">
           <Link to={`/rescues/${rescue.id}`} className="hover:text-primary">
             {rescue.name}
           </Link>
-        </h3>
+        </h2>
         <Badge variant={rescue.dogCount > 0 ? 'success' : 'muted'} className="shrink-0">
           {rescue.dogCount} {rescue.dogCount === 1 ? 'dog' : 'dogs'}
         </Badge>
