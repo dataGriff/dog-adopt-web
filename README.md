@@ -18,11 +18,14 @@ Run the API alongside it with `wrangler dev` in dog-adopt-api (it listens on 878
 pnpm lint
 pnpm typecheck
 pnpm test        # vitest + testing-library against a mocked, contract-validated API
+pnpm test:e2e    # Playwright in Chromium: axe (WCAG 2.2 A/AA) and layout checks at 1280px and 375px
 pnpm build       # type-checks then builds dist/
 pnpm preview
 ```
 
 `task check` runs what CI runs.
+
+`pnpm test:e2e` builds the site, serves it with `vite preview` and answers every API request from the same fixtures the unit tests use (`src/test/apiHandlers.ts`), so it needs no running API. On every page at both widths it fails on any axe WCAG 2.2 A/AA violation or any sideways scroll. It also checks the skip link, that phones show dogs before filters, and that the dog page buttons keep their height. Install the browser once with `pnpm exec playwright install chromium`.
 
 ## Layout
 

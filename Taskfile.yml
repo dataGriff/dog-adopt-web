@@ -22,9 +22,12 @@ tasks:
   build:
     desc: Production build to dist/
     cmds: [pnpm build]
+  test:e2e:
+    desc: Playwright accessibility and layout checks
+    cmds: [pnpm test:e2e]
   check:
     desc: What CI runs
-    cmds: [pnpm lint, pnpm typecheck, pnpm test, pnpm build]
+    cmds: [pnpm lint, pnpm typecheck, pnpm test, pnpm build, pnpm test:e2e]
   preview:
     desc: Serve the production build locally
     deps: [build]

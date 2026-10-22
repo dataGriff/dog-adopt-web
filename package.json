@@ -12,7 +12,8 @@
     "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.node.json --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@dogadopt/contracts": "github:dataGriff/dog-adopt-spec#831a65676ba4a9e4bda06de644f0b7611096e57f",
@@ -25,7 +26,9 @@
     "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.11.3",
     "@eslint/js": "^9.32.0",
+    "@playwright/test": "1.56.1",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.3",
