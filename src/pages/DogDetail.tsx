@@ -51,7 +51,7 @@ export function DogDetailPage() {
       </Link>
 
       <div className="mt-4 grid gap-8 md:grid-cols-2">
-        <div className="overflow-hidden rounded-2xl bg-muted">
+        <div className="self-start overflow-hidden rounded-2xl bg-muted md:sticky md:top-24">
           <img src={d.imageUrl ?? '/placeholder-dog.svg'} alt={d.imageUrl ? `${d.name}, ${breedLine(d)}` : ''} referrerPolicy="no-referrer" className="aspect-[4/3] w-full object-cover" />
         </div>
 
@@ -108,12 +108,12 @@ export function DogDetailPage() {
             </p>
             <div className="mt-4 flex flex-col gap-2 sm:flex-row">
               {d.profileUrl && (
-                <a href={d.profileUrl} target="_blank" rel="noopener noreferrer" className={buttonClasses('default', 'md', 'flex-1')}>
+                <a href={d.profileUrl} target="_blank" rel="noopener noreferrer" className={buttonClasses('default', 'md', 'sm:flex-1')}>
                   View {d.name}'s profile <ExternalLink className="h-4 w-4" aria-hidden />
                 </a>
               )}
               {d.rescue.website && (
-                <a href={d.rescue.website} target="_blank" rel="noopener noreferrer" className={buttonClasses('outline', 'md', 'flex-1')}>
+                <a href={d.rescue.website} target="_blank" rel="noopener noreferrer" className={buttonClasses('outline', 'md', 'sm:flex-1')}>
                   <Globe className="h-4 w-4" aria-hidden /> Rescue website
                 </a>
               )}
