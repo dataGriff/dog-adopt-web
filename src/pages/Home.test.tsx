@@ -131,6 +131,44 @@ describe('Feature: Browsing dogs on the website', () => {
     expect(router.state.location.search).toBe('');
   });
 
+  it('Scenario: Active filters show as chips that remove one filter each', async () => {
+    const api = mockApi();
+    const { router } = renderApp('/?size=Small&goodWithCats=true&page=2');
+    const user = userEvent.setup();
+    const chips = await screen.findByTestId('active-filters');
+    expect(within(chips).getByText('Small')).toBeInTheDocument();
+    expect(within(chips).getByText('Good with cats')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Remove filter: Small' }));
+    await waitFor(() => {
+      const params = new URLSearchParams(router.state.location.search);
+      expect(params.get('size')).toBeNull();
+      expect(params.get('goodWithCats')).toBe('true');
+      expect(params.get('page')).toBeNull();
+    });
+    await waitFor(() => expect(api.last('/v1/dogs')!.url.searchParams.has('size')).toBe(false));
+
+    await user.click(screen.getByRole('button', { name: 'Remove filter: Good with cats' }));
+    await waitFor(() => expect(router.state.location.search).toBe(''));
+    expect(screen.queryByTestId('active-filters')).not.toBeInTheDocument();
+  });
+
+  it('Scenario: On small screens the filters sit behind a toggle', async () => {
+    mockApi();
+    renderApp('/?size=Small');
+    const user = userEvent.setup();
+    await screen.findAllByTestId('dog-card');
+    const toggle = screen.getByRole('button', { name: /Filters/ });
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    expect(toggle).toHaveAttribute('aria-controls', 'filters-panel');
+    expect(within(toggle).getByText('1')).toBeInTheDocument();
+    expect(document.getElementById('filters-panel')).toHaveClass('hidden', 'lg:block');
+
+    await user.click(toggle);
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    expect(document.getElementById('filters-panel')).not.toHaveClass('hidden');
+  });
+
   it('Scenario: Paging through results', async () => {
     const api = mockApi((url) => {
       if (url.pathname !== '/v1/dogs') return undefined;

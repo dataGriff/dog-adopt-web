@@ -1,11 +1,15 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { SlidersHorizontal } from 'lucide-react';
 import { useSearchParams } from 'react-router';
-import { useDogs } from '@/api/queries';
-import { countActiveFilters, filtersFromSearchParams, filtersToSearchParams, type DogFilters } from '@/lib/dogFilters';
+import { useAllRescues, useDogs } from '@/api/queries';
+import { activeFilterChips, countActiveFilters, filtersFromSearchParams, filtersToSearchParams, type DogFilters } from '@/lib/dogFilters';
+import { cn } from '@/lib/utils';
 import { useDocumentTitle } from '@/lib/useDocumentTitle';
 import { useGeolocation } from '@/lib/useGeolocation';
 import { pageTitle } from '@/lib/format';
+import { ActiveFilters } from '@/components/ActiveFilters';
 import { DogGrid } from '@/components/DogGrid';
+import { Button } from '@/components/ui/button';
 import { ErrorState } from '@/components/ErrorState';
 import { FilterSidebar } from '@/components/FilterSidebar';
 import { PaginationControls } from '@/components/PaginationControls';
@@ -16,6 +20,8 @@ export function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const filters = useMemo(() => filtersFromSearchParams(searchParams), [searchParams]);
   const geo = useGeolocation();
+  const rescues = useAllRescues();
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   const update = useCallback(
     (patch: Partial<DogFilters>, resetPage = true) => {
@@ -49,6 +55,14 @@ export function HomePage() {
     lng: filters.lng,
   });
 
+  const activeCount = countActiveFilters(filters);
+  const rescueNames = useMemo(() => new Map((rescues.data ?? []).map((r) => [r.id, r.name])), [rescues.data]);
+  const chips = useMemo(() => activeFilterChips(filters, (id) => rescueNames.get(id)), [filters, rescueNames]);
+  const clearAll = () => {
+    geo.reset();
+    setSearchParams(new URLSearchParams());
+  };
+
   const nearMeStatus = filters.lat !== undefined ? 'on' : geo.state.status === 'locating' ? 'locating' : geo.state.status === 'denied' ? 'denied' : 'idle';
 
   return (
@@ -74,11 +88,18 @@ export function HomePage() {
         </div>
       </section>
 
-      <section id="dogs" className="mx-auto grid max-w-6xl gap-8 px-4 py-8 lg:grid-cols-[280px_1fr]">
-        <FilterSidebar filters={filters} onChange={(patch) => update(patch)} onClear={() => {
-            geo.reset();
-            setSearchParams(new URLSearchParams());
-          }} activeCount={countActiveFilters(filters)} />
+      <section id="dogs" className="mx-auto grid max-w-6xl gap-6 px-4 py-8 lg:grid-cols-[280px_1fr] lg:gap-8">
+        <div className="lg:hidden">
+          <Button variant="outline" className="w-full" aria-expanded={filtersOpen} aria-controls="filters-panel" onClick={() => setFiltersOpen((o) => !o)}>
+            <SlidersHorizontal className="h-4 w-4" aria-hidden />
+            {filtersOpen ? 'Hide filters' : 'Filters'}
+            {activeCount > 0 && <span className="rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">{activeCount}</span>}
+          </Button>
+        </div>
+
+        <div id="filters-panel" className={cn(filtersOpen ? 'block' : 'hidden', 'lg:block')}>
+          <FilterSidebar filters={filters} onChange={(patch) => update(patch)} onClear={clearAll} activeCount={activeCount} />
+        </div>
 
         <div>
           <div className="mb-4 flex items-baseline justify-between gap-3">
@@ -89,6 +110,8 @@ export function HomePage() {
               </p>
             )}
           </div>
+
+          <ActiveFilters chips={chips} onRemove={(chip) => update(chip.remove)} onClearAll={clearAll} />
 
           {dogs.isError ? (
             <ErrorState what="Dogs" detail={dogs.error.message} onRetry={() => dogs.refetch()} />

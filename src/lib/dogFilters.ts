@@ -76,3 +76,30 @@ export function filtersToQuery(filters: DogFilters) {
 export function countActiveFilters(filters: DogFilters): number {
   return Object.entries(filters).filter(([key, value]) => key !== 'page' && key !== 'lng' && value !== undefined).length;
 }
+
+export interface FilterChip {
+  key: string;
+  label: string;
+  /** The change that removes just this filter. */
+  remove: Partial<DogFilters>;
+}
+
+/**
+ * One chip per active filter, in the order the controls appear, with a
+ * readable label. `rescueName` turns a rescue id into its name.
+ */
+export function activeFilterChips(filters: DogFilters, rescueName: (id: string) => string | undefined = () => undefined): FilterChip[] {
+  const chips: FilterChip[] = [];
+  if (filters.q) chips.push({ key: 'q', label: `Search: ${filters.q}`, remove: { q: undefined } });
+  if (filters.lat !== undefined) chips.push({ key: 'near', label: 'Near me', remove: { lat: undefined, lng: undefined } });
+  if (filters.size) chips.push({ key: 'size', label: filters.size, remove: { size: undefined } });
+  if (filters.age) chips.push({ key: 'age', label: filters.age, remove: { age: undefined } });
+  if (filters.gender) chips.push({ key: 'gender', label: filters.gender, remove: { gender: undefined } });
+  if (filters.breed) chips.push({ key: 'breed', label: filters.breed, remove: { breed: undefined } });
+  if (filters.region) chips.push({ key: 'region', label: filters.region, remove: { region: undefined } });
+  if (filters.rescueId) chips.push({ key: 'rescueId', label: rescueName(filters.rescueId) ?? 'Selected rescue', remove: { rescueId: undefined } });
+  if (filters.goodWithKids) chips.push({ key: 'goodWithKids', label: 'Good with children', remove: { goodWithKids: undefined } });
+  if (filters.goodWithDogs) chips.push({ key: 'goodWithDogs', label: 'Good with other dogs', remove: { goodWithDogs: undefined } });
+  if (filters.goodWithCats) chips.push({ key: 'goodWithCats', label: 'Good with cats', remove: { goodWithCats: undefined } });
+  return chips;
+}
