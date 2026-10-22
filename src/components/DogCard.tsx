@@ -2,22 +2,18 @@ import { Link } from 'react-router';
 import { ExternalLink, MapPin } from 'lucide-react';
 import type { Dog } from '@dogadopt/contracts';
 import { breedLine, formatDistance, formatStatus, relativeDay } from '@/lib/format';
+import { cn } from '@/lib/utils';
 import { Badge } from './ui/badge';
 import { buttonClasses } from './ui/button-classes';
 import { CompatibilityBadges } from './CompatibilityBadges';
+import { DogPhoto } from './DogPhoto';
 
 export function DogCard({ dog }: { dog: Dog }) {
   const distance = formatDistance(dog.distanceKm);
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-card shadow-card transition-all hover:-translate-y-1 hover:shadow-hover" data-testid="dog-card">
-      <Link to={`/dogs/${dog.id}`} className="relative block aspect-[4/3] overflow-hidden bg-muted">
-        <img
-          src={dog.imageUrl ?? '/placeholder-dog.svg'}
-          alt={dog.imageUrl ? `${dog.name}, ${breedLine(dog)}` : ''}
-          loading="lazy"
-          referrerPolicy="no-referrer"
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
+      <Link to={`/dogs/${dog.id}`} className="relative block overflow-hidden bg-muted">
+        <DogPhoto dog={dog} className={cn(dog.imageUrl && 'transition-transform duration-500 group-hover:scale-105')} />
         <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
           <Badge variant={dog.status === 'available' ? 'success' : 'warm'}>{formatStatus(dog.status)}</Badge>
           {distance && (
@@ -45,27 +41,26 @@ export function DogCard({ dog }: { dog: Dog }) {
           <Badge variant="outline">{dog.gender}</Badge>
         </div>
 
-        <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
-          <MapPin className="h-4 w-4 shrink-0" aria-hidden />
-          <span className="truncate">
-            <Link to={`/rescues/${dog.rescue.id}`} className="hover:text-foreground">
+        <div className="flex items-start gap-1.5 text-sm">
+          <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
+          <p className="min-w-0">
+            <Link to={`/rescues/${dog.rescue.id}`} className="font-medium hover:text-primary">
               {dog.rescue.name}
             </Link>
-            <span className="mx-1">·</span>
-            {dog.rescue.region}
-          </span>
-        </p>
+            <span className="block text-xs text-muted-foreground">{dog.rescue.region}</span>
+          </p>
+        </div>
 
         <CompatibilityBadges dog={dog} />
 
         <p className="text-xs text-muted-foreground">Last seen listed {relativeDay(dog.lastSeenAt)}</p>
 
-        <div className="mt-auto flex gap-2 pt-1">
-          <Link to={`/dogs/${dog.id}`} className={buttonClasses('secondary', 'md', 'flex-1')}>
+        <div className="mt-auto flex flex-wrap gap-2 pt-1">
+          <Link to={`/dogs/${dog.id}`} className={buttonClasses('secondary', 'md', 'grow')}>
             Details
           </Link>
           {dog.profileUrl && (
-            <a href={dog.profileUrl} target="_blank" rel="noopener noreferrer" className={buttonClasses('default', 'md', 'flex-1')}>
+            <a href={dog.profileUrl} target="_blank" rel="noopener noreferrer" className={buttonClasses('default', 'md', 'grow')}>
               Rescue profile <ExternalLink className="h-4 w-4" aria-hidden />
             </a>
           )}
@@ -78,7 +73,7 @@ export function DogCard({ dog }: { dog: Dog }) {
 export function DogCardSkeleton() {
   return (
     <div className="overflow-hidden rounded-2xl border border-border/60 bg-card">
-      <div className="aspect-[4/3] animate-pulse bg-muted" />
+      <div className="aspect-video animate-pulse bg-muted" />
       <div className="space-y-3 p-5">
         <div className="h-6 w-1/2 animate-pulse rounded bg-muted" />
         <div className="h-4 w-3/4 animate-pulse rounded bg-muted" />

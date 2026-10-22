@@ -8,6 +8,7 @@ import { buttonClasses } from '@/components/ui/button-classes';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CompatibilityList } from '@/components/CompatibilityBadges';
 import { ErrorState } from '@/components/ErrorState';
+import { DogPhoto } from '@/components/DogPhoto';
 
 export function DogDetailPage() {
   const { dogId } = useParams<{ dogId: string }>();
@@ -52,7 +53,7 @@ export function DogDetailPage() {
 
       <div className="mt-4 grid gap-8 md:grid-cols-2">
         <div className="self-start overflow-hidden rounded-2xl bg-muted md:sticky md:top-24">
-          <img src={d.imageUrl ?? '/placeholder-dog.svg'} alt={d.imageUrl ? `${d.name}, ${breedLine(d)}` : ''} referrerPolicy="no-referrer" className="aspect-[4/3] w-full object-cover" />
+          <DogPhoto dog={d} size="page" />
         </div>
 
         <div className="space-y-5">
