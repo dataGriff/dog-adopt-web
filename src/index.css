@@ -1,0 +1,72 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Fredoka', 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: hsl(210 40% 98%);
+  --color-foreground: hsl(222 47% 11%);
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(222 47% 11%);
+  /* Primary is dark enough for white text on it and for text on light
+     backgrounds (5:1 or better). Brand is the brighter orange of the logo,
+     for use on dark surfaces such as the footer. */
+  --color-primary: hsl(21 90% 38%);
+  --color-brand: hsl(25 90% 55%);
+  --color-primary-foreground: hsl(210 40% 98%);
+  --color-secondary: hsl(210 40% 96%);
+  --color-secondary-foreground: hsl(222 47% 11%);
+  --color-muted: hsl(210 40% 96%);
+  --color-muted-foreground: hsl(215 20% 41%);
+  --color-accent: hsl(30 100% 95%);
+  --color-accent-foreground: hsl(222 47% 11%);
+  --color-destructive: hsl(0 74% 40%);
+  --color-destructive-foreground: hsl(210 40% 98%);
+  --color-success: hsl(152 65% 24%);
+  --color-border: hsl(214 32% 91%);
+  --color-input: hsl(214 32% 91%);
+  --color-ring: hsl(21 90% 38%);
+
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+
+  --shadow-soft: 0 4px 20px -4px hsl(25 30% 30% / 0.1);
+  --shadow-card: 0 8px 30px -8px hsl(25 30% 30% / 0.12);
+  --shadow-hover: 0 12px 40px -8px hsl(25 30% 30% / 0.18);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    overflow-x: hidden;
+  }
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    min-width: 320px;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+  }
+  /* A visible focus ring for links and anything else focusable that does
+     not draw its own (buttons and inputs use ring utilities instead). */
+  a:focus-visible,
+  summary:focus-visible,
+  [tabindex]:not([tabindex='-1']):focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+    border-radius: 0.375rem;
+  }
+  footer a:focus-visible {
+    outline-color: var(--color-brand);
+  }
+}
+
+.bg-hero {
+  background: linear-gradient(135deg, hsl(210 40% 98%) 0%, hsl(30 80% 92%) 100%);
+}

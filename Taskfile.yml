@@ -1,0 +1,41 @@
+version: "3"
+
+tasks:
+  default:
+    desc: List tasks
+    cmds: [task --list]
+  install:
+    desc: Install dependencies
+    cmds: [pnpm install]
+  dev:
+    desc: Start the dev server (expects the API on VITE_API_BASE_URL, default http://localhost:8787)
+    cmds: [pnpm dev]
+  lint:
+    desc: ESLint
+    cmds: [pnpm lint]
+  typecheck:
+    desc: TypeScript
+    cmds: [pnpm typecheck]
+  test:
+    desc: Vitest
+    cmds: [pnpm test]
+  build:
+    desc: Production build to dist/
+    cmds: [pnpm build]
+  test:e2e:
+    desc: Playwright accessibility and layout checks
+    cmds: [pnpm test:e2e]
+  check:
+    desc: What CI runs
+    cmds: [pnpm lint, pnpm typecheck, pnpm test, pnpm build, pnpm test:e2e]
+  preview:
+    desc: Serve the production build locally
+    deps: [build]
+    cmds: [pnpm preview]
+  deploy:
+    desc: Deploy dist/ to Cloudflare with wrangler (needs CLOUDFLARE_API_TOKEN)
+    deps: [build]
+    cmds: [pnpm deploy]
+  update-contracts:
+    desc: Pull the latest @dogadopt/contracts from the pinned git ref
+    cmds: [pnpm update @dogadopt/contracts]
