@@ -1,0 +1,36 @@
+name: Deploy
+
+# Deploys the built site to Cloudflare with wrangler. Needs the repository
+# secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID, and the variable
+# VITE_API_BASE_URL pointing at the deployed Dogs API. Until the secret is
+# set the job is skipped, so pushing to main is safe.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to Cloudflare
+    runs-on: ubuntu-latest
+    if: ${{ vars.CLOUDFLARE_DEPLOY_ENABLED == 'true' }}
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+        env:
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy
