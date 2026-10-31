@@ -37,13 +37,19 @@ for (const viewport of WIDTHS) {
       });
     }
 
-    test('the first Tab stop is the skip link, and it moves focus to the content', async ({ page }) => {
-      await page.goto('/rescues');
-      await page.locator('[data-testid="rescue-card"]').first().waitFor();
+    test('the first Tab stop is the skip link, and it moves focus to the content below the header', async ({ page }) => {
+      await page.goto(`/dogs/${BELLA.id}`);
+      await page.locator('h1').waitFor();
+      // Start scrolled down, so the skip link has to scroll the content back into view.
+      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
       await page.keyboard.press('Tab');
       await expect(page.getByRole('link', { name: 'Skip to content' })).toBeFocused();
       await page.keyboard.press('Enter');
       await expect(page.locator('main#main')).toBeFocused();
+
+      const headerBottom = await page.locator('header').evaluate((el) => el.getBoundingClientRect().bottom);
+      const mainTop = await page.locator('main#main').evaluate((el) => el.getBoundingClientRect().top);
+      expect(mainTop, 'main content must not start under the sticky header').toBeGreaterThanOrEqual(headerBottom);
     });
   });
 }

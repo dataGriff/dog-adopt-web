@@ -12,7 +12,8 @@ export function Layout() {
         Skip to content
       </a>
       <Header />
-      <main id="main" tabIndex={-1} className="flex-1 focus:outline-none">
+      {/* scroll-mt clears the sticky header (h-16 plus its border) when the skip link scrolls here. */}
+      <main id="main" tabIndex={-1} className="flex-1 scroll-mt-20 focus:outline-none">
         <Outlet />
       </main>
       <Footer />

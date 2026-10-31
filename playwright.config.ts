@@ -4,7 +4,9 @@ import { defineConfig, devices } from '@playwright/test';
 // e2e/fixtures.ts answers every request to that host from the same
 // contract-validated fixtures the unit tests use, so no API needs to run.
 export const FAKE_API = 'http://api.dogadopt.test';
-const PORT = 4173;
+// Not vite preview's default 4173, so a `pnpm preview` left running locally
+// (built against a real API) is never mistaken for the test server.
+const PORT = 4317;
 
 export default defineConfig({
   testDir: 'e2e',

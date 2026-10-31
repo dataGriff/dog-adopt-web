@@ -50,3 +50,8 @@ function startOfDay(d: Date): number {
 export function pageTitle(...parts: (string | null | undefined)[]): string {
   return [...parts.filter(Boolean), 'Dog Adopt'].join(' | ');
 }
+
+/** The first letter or digit of a name, for the placeholder; skips emoji and punctuation. */
+export function initialOf(name: string): string {
+  return name.match(/[\p{L}\p{N}]/u)?.[0]?.toLocaleUpperCase('en-GB') ?? '?';
+}

@@ -29,6 +29,12 @@ jobs:
   browser:
     name: Accessibility and layout (Playwright)
     runs-on: ubuntu-latest
+    # Chromium and its system libraries come preinstalled in the official image.
+    # Its tag must match the @playwright/test version pinned in package.json;
+    # if they drift apart, Playwright fails with a missing-browser error.
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --user 1001
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -39,8 +45,6 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - name: Install Chromium for Playwright
-        run: pnpm exec playwright install --with-deps chromium
       - run: pnpm test:e2e
         env:
           CI: true

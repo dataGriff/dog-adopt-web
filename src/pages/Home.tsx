@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { SlidersHorizontal } from 'lucide-react';
 import { useSearchParams } from 'react-router';
 import { useAllRescues, useDogs } from '@/api/queries';
-import { activeFilterChips, countActiveFilters, filtersFromSearchParams, filtersToSearchParams, type DogFilters } from '@/lib/dogFilters';
+import { activeFilterChips, filtersFromSearchParams, filtersToSearchParams, type DogFilters } from '@/lib/dogFilters';
 import { cn } from '@/lib/utils';
 import { useDocumentTitle } from '@/lib/useDocumentTitle';
 import { useGeolocation } from '@/lib/useGeolocation';
@@ -55,9 +55,10 @@ export function HomePage() {
     lng: filters.lng,
   });
 
-  const activeCount = countActiveFilters(filters);
   const rescueNames = useMemo(() => new Map((rescues.data ?? []).map((r) => [r.id, r.name])), [rescues.data]);
   const chips = useMemo(() => activeFilterChips(filters, (id) => rescueNames.get(id)), [filters, rescueNames]);
+  // One definition of "active filter": the chips. The badge and Clear (n) count them.
+  const activeCount = chips.length;
   const clearAll = () => {
     geo.reset();
     setSearchParams(new URLSearchParams());

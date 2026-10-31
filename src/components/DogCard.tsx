@@ -2,7 +2,6 @@ import { Link } from 'react-router';
 import { ExternalLink, MapPin } from 'lucide-react';
 import type { Dog } from '@dogadopt/contracts';
 import { breedLine, formatDistance, formatStatus, relativeDay } from '@/lib/format';
-import { cn } from '@/lib/utils';
 import { Badge } from './ui/badge';
 import { buttonClasses } from './ui/button-classes';
 import { CompatibilityBadges } from './CompatibilityBadges';
@@ -10,10 +9,13 @@ import { DogPhoto } from './DogPhoto';
 
 export function DogCard({ dog }: { dog: Dog }) {
   const distance = formatDistance(dog.distanceKm);
+  const photoLinkLabel = [dog.name, formatStatus(dog.status), distance && `${distance} away`].filter(Boolean).join(', ');
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-card shadow-card transition-all hover:-translate-y-1 hover:shadow-hover" data-testid="dog-card">
-      <Link to={`/dogs/${dog.id}`} className="relative block overflow-hidden bg-muted">
-        <DogPhoto dog={dog} className={cn(dog.imageUrl && 'transition-transform duration-500 group-hover:scale-105')} />
+      {/* The photo link duplicates the name link, so it gets an explicit name: otherwise
+          it would be announced by the placeholder caption, which is about the rescue's site. */}
+      <Link to={`/dogs/${dog.id}`} aria-label={photoLinkLabel} className="relative block overflow-hidden bg-muted">
+        <DogPhoto dog={dog} zoomOnHover />
         <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
           <Badge variant={dog.status === 'available' ? 'success' : 'warm'}>{formatStatus(dog.status)}</Badge>
           {distance && (

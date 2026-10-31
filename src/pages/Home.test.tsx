@@ -117,7 +117,8 @@ describe('Feature: Browsing dogs on the website', () => {
     await waitFor(() => expect(new URLSearchParams(router.state.location.search).get('lat')).toBe('51.5'));
 
     // Clear every filter from the sidebar: the location must go and stay gone.
-    await user.click(screen.getByRole('button', { name: /Clear/ }));
+    // The router renders navigations in a transition, so wait for the UI, not just the URL.
+    await user.click(await screen.findByRole('button', { name: /^Clear \(1\)$/ }));
     await waitFor(() => expect(router.state.location.search).toBe(''));
     await waitFor(() => expect(api.last('/v1/dogs')!.url.searchParams.has('lat')).toBe(false));
     expect(screen.getByRole('button', { name: /Near me/ })).toBeInTheDocument();

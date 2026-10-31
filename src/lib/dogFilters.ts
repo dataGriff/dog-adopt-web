@@ -73,10 +73,6 @@ export function filtersToQuery(filters: DogFilters) {
   return { ...rest, page };
 }
 
-export function countActiveFilters(filters: DogFilters): number {
-  return Object.entries(filters).filter(([key, value]) => key !== 'page' && key !== 'lng' && value !== undefined).length;
-}
-
 export interface FilterChip {
   key: string;
   label: string;
