@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink } from 'react-router';
 import { Menu, PawPrint, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -11,11 +11,28 @@ const links = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+
+  // Publish the header's height (it grows with the phone menu) so anchor targets
+  // such as the skip link scroll to just below it; see scroll-padding-top in index.css.
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const root = document.documentElement;
+    const publish = () => root.style.setProperty('--header-height', `${el.offsetHeight}px`);
+    publish();
+    const observer = new ResizeObserver(publish);
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty('--header-height');
+    };
+  }, []);
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     cn('font-medium transition-colors hover:text-foreground', isActive ? 'text-foreground' : 'text-muted-foreground');
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-card/80 backdrop-blur-md">
+    <header ref={headerRef} className="sticky top-0 z-40 border-b border-border bg-card/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground">

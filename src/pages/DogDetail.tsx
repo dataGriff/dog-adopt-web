@@ -10,6 +10,10 @@ import { CompatibilityList } from '@/components/CompatibilityBadges';
 import { ErrorState } from '@/components/ErrorState';
 import { DogPhoto } from '@/components/DogPhoto';
 
+// The rescue panel's buttons include the dog's name, so unlike other buttons they
+// may wrap; min-h keeps them at least the usual 40px tall.
+const WRAPPING_BUTTON = 'h-auto min-h-10 whitespace-normal py-2 text-center sm:flex-1';
+
 export function DogDetailPage() {
   const { dogId } = useParams<{ dogId: string }>();
   const dog = useDog(dogId);
@@ -17,10 +21,19 @@ export function DogDetailPage() {
 
   if (dog.isPending) {
     return (
-      <div className="mx-auto max-w-5xl px-4 py-8" aria-busy="true">
-        <Skeleton className="aspect-[4/3] w-full" />
-        <Skeleton className="mt-6 h-8 w-1/3" />
-        <Skeleton className="mt-3 h-4 w-1/2" />
+      <div className="mx-auto max-w-5xl px-4 py-8" aria-busy="true" aria-label="Loading dog">
+        <Skeleton className="h-5 w-20" />
+        {/* Same grid as the loaded page, so nothing jumps when the dog arrives. */}
+        <div className="mt-4 grid gap-8 md:grid-cols-2">
+          <Skeleton className="aspect-video w-full rounded-2xl" />
+          <div className="space-y-4">
+            <Skeleton className="h-6 w-1/2" />
+            <Skeleton className="h-10 w-2/3" />
+            <Skeleton className="h-5 w-1/2" />
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-40 w-full rounded-2xl" />
+          </div>
+        </div>
       </div>
     );
   }
@@ -107,14 +120,14 @@ export function DogDetailPage() {
             <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
               <MapPin className="h-4 w-4" aria-hidden /> {d.rescue.region}
             </p>
-            <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
               {d.profileUrl && (
-                <a href={d.profileUrl} target="_blank" rel="noopener noreferrer" className={buttonClasses('default', 'md', 'sm:flex-1')}>
+                <a href={d.profileUrl} target="_blank" rel="noopener noreferrer" className={buttonClasses('default', 'md', WRAPPING_BUTTON)}>
                   View {d.name}'s profile <ExternalLink className="h-4 w-4" aria-hidden />
                 </a>
               )}
               {d.rescue.website && (
-                <a href={d.rescue.website} target="_blank" rel="noopener noreferrer" className={buttonClasses('outline', 'md', 'sm:flex-1')}>
+                <a href={d.rescue.website} target="_blank" rel="noopener noreferrer" className={buttonClasses('outline', 'md', WRAPPING_BUTTON)}>
                   <Globe className="h-4 w-4" aria-hidden /> Rescue website
                 </a>
               )}

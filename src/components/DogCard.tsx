@@ -9,14 +9,16 @@ import { DogPhoto } from './DogPhoto';
 
 export function DogCard({ dog }: { dog: Dog }) {
   const distance = formatDistance(dog.distanceKm);
-  const photoLinkLabel = [dog.name, formatStatus(dog.status), distance && `${distance} away`].filter(Boolean).join(', ');
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-card shadow-card transition-all hover:-translate-y-1 hover:shadow-hover" data-testid="dog-card">
-      {/* The photo link duplicates the name link, so it gets an explicit name: otherwise
-          it would be announced by the placeholder caption, which is about the rescue's site. */}
-      <Link to={`/dogs/${dog.id}`} aria-label={photoLinkLabel} className="relative block overflow-hidden bg-muted">
-        <DogPhoto dog={dog} zoomOnHover />
-        <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
+      <div className="relative overflow-hidden bg-muted">
+        {/* A mouse shortcut only: the name link and Details button below go to the same page,
+            so this one is kept out of the tab order and the accessibility tree rather than
+            announced by the placeholder caption, which is about the rescue's own site. */}
+        <Link to={`/dogs/${dog.id}`} tabIndex={-1} aria-hidden className="block">
+          <DogPhoto dog={dog} zoomOnHover />
+        </Link>
+        <div className="pointer-events-none absolute left-3 top-3 flex flex-wrap gap-1.5">
           <Badge variant={dog.status === 'available' ? 'success' : 'warm'}>{formatStatus(dog.status)}</Badge>
           {distance && (
             <Badge variant="secondary" className="gap-1">
@@ -25,7 +27,7 @@ export function DogCard({ dog }: { dog: Dog }) {
             </Badge>
           )}
         </div>
-      </Link>
+      </div>
 
       <div className="flex flex-1 flex-col gap-3 p-5">
         <div>

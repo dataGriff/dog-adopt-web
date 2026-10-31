@@ -44,14 +44,20 @@ describe('DogCard photo link', () => {
   const renderCard = (dog: typeof BELLA) =>
     render(<RouterProvider router={createMemoryRouter([{ path: '/', element: <DogCard dog={dog} /> }])} />);
 
-  it('is named after the dog and its status, not the placeholder caption', () => {
-    renderCard(DOT);
-    const link = screen.getAllByRole('link').find((a) => a.querySelector('[data-testid="photo-placeholder"]'))!;
-    expect(link).toHaveAccessibleName(`${DOT.name}, Available`);
+  it('is a mouse shortcut only: out of the tab order and the accessibility tree', () => {
+    const { container } = renderCard(DOT);
+    const photoLink = container.querySelector('[data-testid="photo-placeholder"]')!.closest('a')!;
+    expect(photoLink).toHaveAttribute('tabindex', '-1');
+    expect(photoLink).toHaveAttribute('aria-hidden', 'true');
+    // The links assistive tech sees are the name link and Details, both to the same page.
+    const links = screen.getAllByRole('link').filter((a) => a.getAttribute('href') === `/dogs/${DOT.id}`);
+    expect(links.map((a) => a.textContent?.trim())).toEqual([DOT.name, 'Details']);
   });
 
-  it('includes the distance when there is one', () => {
+  it('keeps the status and distance badges readable', () => {
     renderCard({ ...BELLA, distanceKm: 3.26 });
-    expect(screen.getByRole('link', { name: 'Bella, Available, 3.3 km away' })).toBeInTheDocument();
+    expect(screen.getByText('Available')).toBeVisible();
+    expect(screen.getByText('Available').closest('[aria-hidden="true"]')).toBeNull();
+    expect(screen.getByText('3.3 km').closest('[aria-hidden="true"]')).toBeNull();
   });
 });

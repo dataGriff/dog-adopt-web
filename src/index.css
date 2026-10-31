@@ -45,6 +45,14 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     min-width: 320px;
+    /* Break an unbroken word (a long name, a pasted search) only when it would
+       otherwise overflow; this also lets grid and flex items shrink below it. */
+    overflow-wrap: anywhere;
+  }
+  html {
+    /* Anchor and skip-link targets land below the sticky header, which keeps
+       --header-height up to date (it grows when the phone menu is open). */
+    scroll-padding-top: calc(var(--header-height, 4rem) + 0.5rem);
   }
   h1, h2, h3, h4 {
     font-family: var(--font-display);

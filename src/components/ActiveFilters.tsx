@@ -14,16 +14,16 @@ export function ActiveFilters({ chips, onRemove, onClearAll }: Props) {
   return (
     <div className="mb-4 flex flex-wrap items-center gap-2" data-testid="active-filters">
       <h3 className="sr-only">Active filters</h3>
-      <ul className="flex flex-wrap gap-2">
+      <ul className="flex min-w-0 max-w-full flex-wrap gap-2">
         {chips.map((chip) => (
-          <li key={chip.key}>
-            <span className="inline-flex items-center gap-1 rounded-full border border-border bg-card py-1 pl-3 pr-1 text-sm">
-              {chip.label}
+          <li key={chip.key} className="max-w-full">
+            <span className="inline-flex max-w-full items-center gap-1 rounded-full border border-border bg-card py-1 pl-3 pr-1 text-sm">
+              <span className="min-w-0">{chip.label}</span>
               <button
                 type="button"
                 onClick={() => onRemove(chip)}
                 aria-label={`Remove filter: ${chip.label}`}
-                className="rounded-full p-1 text-muted-foreground hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="shrink-0 rounded-full p-1 text-muted-foreground hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <X className="h-3.5 w-3.5" aria-hidden />
               </button>
